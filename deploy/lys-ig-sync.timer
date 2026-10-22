@@ -1,0 +1,15 @@
+# Раз на добу о 04:20 за київським часом (+ до 20 хв розкиду, щоб не бити в API
+# точно о рівній годині). Persistent=true дожене пропущений запуск, якщо
+# сервер у цей час був вимкнений.
+# Копія: /etc/systemd/system/lys-ig-sync.timer
+[Unit]
+Description=Щодобова синхронізація постів Instagram для Lys Montage
+
+[Timer]
+OnCalendar=*-*-* 04:20:00
+RandomizedDelaySec=20m
+Persistent=true
+Unit=lys-ig-sync.service
+
+[Install]
+WantedBy=timers.target

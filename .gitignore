@@ -1,2 +1,11 @@
 .DS_Store
 *.log
+__pycache__/
+
+# Генерується tools/ig_sync.py — не версіонуємо (фото й підписи живуть на сервері)
+assets/data/instagram.json
+assets/instagram/
+
+# Токен доступу Instagram
+.env
+.ig-state/

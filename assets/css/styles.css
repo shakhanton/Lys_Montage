@@ -303,6 +303,71 @@ button:focus-visible {
   font-size: 0.92rem;
 }
 
+/* Instagram-галерея (рендериться assets/js/instagram.js) */
+.ig-item {
+  display: flex;
+  flex-direction: column;
+  color: inherit;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+.ig-item:hover,
+.ig-item:focus-visible {
+  text-decoration: none;
+  transform: translateY(-3px);
+  border-color: var(--c-fox);
+  box-shadow: 0 10px 28px rgba(41, 45, 48, 0.12);
+}
+.ig-frame {
+  position: relative;
+}
+.ig-frame img {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  background: var(--c-fog);
+}
+.ig-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(27, 30, 32, 0.78);
+  color: var(--c-white);
+  font-size: 0.78rem;
+  line-height: 1.5;
+  letter-spacing: 0.01em;
+}
+.ig-body {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 18px 20px;
+}
+.ig-body strong { color: var(--c-navy); }
+.ig-text {
+  color: var(--c-graphite);
+  font-size: 0.92rem;
+}
+.ig-meta {
+  margin-top: auto;
+  padding-top: 4px;
+  color: var(--c-grey);
+  font-size: 0.82rem;
+}
+.gallery-note {
+  margin: 28px 0 0;
+  color: var(--c-grey);
+  font-size: 0.92rem;
+}
+.gallery-note[hidden] { display: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ig-item { transition: none; }
+  .ig-item:hover,
+  .ig-item:focus-visible { transform: none; }
+}
+
 /* About */
 .about-grid {
   display: grid;

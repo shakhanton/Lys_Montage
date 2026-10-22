@@ -1,0 +1,39 @@
+# Разовий запуск синхронізації Instagram. Розклад — у lys-ig-sync.timer.
+# Копія: /etc/systemd/system/lys-ig-sync.service
+[Unit]
+Description=Lys Montage — синхронізація постів з Instagram
+Documentation=file:/srv/lys-montage/repo/docs/instagram-sync.md
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=lysmontage
+Group=lysmontage
+WorkingDirectory=/srv/lys-montage/repo
+EnvironmentFile=/srv/lys-montage/ig-sync.env
+ExecStart=/usr/bin/python3 /srv/lys-montage/repo/tools/ig_sync.py \
+    --json-out /srv/lys-montage/data/instagram.json \
+    --images-out /srv/lys-montage/data/instagram \
+    --url-prefix assets/instagram \
+    --state /srv/lys-montage/state/token.json
+TimeoutStartSec=600
+
+# Пісочниця: скрипту потрібні лише свої два каталоги на запис.
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/srv/lys-montage/data /srv/lys-montage/state
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictAddressFamilies=AF_INET AF_INET6
+RestrictNamespaces=true
+LockPersonality=true
+MemoryDenyWriteExecute=true
+SystemCallFilter=@system-service
+SystemCallErrorNumber=EPERM
+
+[Install]
+WantedBy=multi-user.target
