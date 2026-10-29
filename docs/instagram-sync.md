@@ -161,12 +161,16 @@ journalctl -u lys-ig-sync.service -n 40 --no-pager
 Коли записи розійдуться (перевірка: `dig +short lysmontage.com`):
 
 ```sh
-nano /etc/nginx/sites-available/lys-montage    # підставити свій домен у server_name
-nginx -t && systemctl reload nginx
-certbot --nginx -d lysmontage.com -d www.lysmontage.com
+certbot --nginx --redirect -d lysmontage.com -d www.lysmontage.com
 ```
 
-Certbot сам перепише конфіг під HTTPS і поставить автопродовження сертифіката.
+Certbot допише сертифікат і редирект HTTP → HTTPS у `/etc/nginx/sites-available/lys-montage`
+і поставить автопродовження. `deploy.sh` цей файл не перезаписує — оновлює лише
+правила сайту в `/etc/nginx/snippets/lys-montage-site.conf`. Адреси з `www` переадресовуються
+на `lysmontage.com`.
+
+Якщо домен інший, ніж `lysmontage.com`, замінити його в усіх файлах до першого деплою:
+`grep -rl lysmontage.com index.html robots.txt sitemap.xml deploy/`.
 
 ---
 

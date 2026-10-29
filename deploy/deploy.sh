@@ -16,7 +16,19 @@ git -C "$BASE/repo" reset --hard --quiet "origin/$BRANCH"
 echo "Стало: $(git -C "$BASE/repo" rev-parse --short HEAD)"
 
 # Конфіги в репозиторії могли змінитися — переставляємо їх.
-install -m 644 "$BASE/repo/deploy/nginx-lys-montage.conf" /etc/nginx/sites-available/lys-montage
+# Лише правила сайту; server-блок із сертифікатом certbot не перезаписуємо.
+install -m 644 "$BASE/repo/deploy/nginx-lys-montage-site.conf" /etc/nginx/snippets/lys-montage-site.conf
+# Server-блок ставимо лише раз: після certbot у ньому живе сертифікат.
+# Старий конфіг «все в одному» (до винесення правил у snippet) замінюємо,
+# поки certbot його ще не чіпав.
+SITE_CONF=/etc/nginx/sites-available/lys-montage
+if [[ ! -f $SITE_CONF ]] || ! grep -q 'snippets/lys-montage-site.conf' "$SITE_CONF"; then
+  if [[ -f $SITE_CONF ]] && grep -q 'managed by Certbot' "$SITE_CONF"; then
+    echo "УВАГА: $SITE_CONF уже з сертифікатом, але без include snippets/lys-montage-site.conf — перенести вручну" >&2
+  else
+    install -m 644 "$BASE/repo/deploy/nginx-lys-montage.conf" "$SITE_CONF"
+  fi
+fi
 install -m 644 "$BASE/repo/deploy/lys-ig-sync.service" /etc/systemd/system/lys-ig-sync.service
 install -m 644 "$BASE/repo/deploy/lys-ig-sync.timer" /etc/systemd/system/lys-ig-sync.timer
 systemctl daemon-reload

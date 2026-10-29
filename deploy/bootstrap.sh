@@ -65,7 +65,18 @@ chown root:"$USER_NAME" "$BASE/ig-sync.env"
 chmod 640 "$BASE/ig-sync.env"
 
 log "nginx"
-install -m 644 "$BASE/repo/deploy/nginx-lys-montage.conf" /etc/nginx/sites-available/lys-montage
+install -m 644 "$BASE/repo/deploy/nginx-lys-montage-site.conf" /etc/nginx/snippets/lys-montage-site.conf
+# Server-блок ставимо лише раз: після certbot у ньому живе сертифікат.
+# Старий конфіг «все в одному» (до винесення правил у snippet) замінюємо,
+# поки certbot його ще не чіпав.
+SITE_CONF=/etc/nginx/sites-available/lys-montage
+if [[ ! -f $SITE_CONF ]] || ! grep -q 'snippets/lys-montage-site.conf' "$SITE_CONF"; then
+  if [[ -f $SITE_CONF ]] && grep -q 'managed by Certbot' "$SITE_CONF"; then
+    echo "УВАГА: $SITE_CONF уже з сертифікатом, але без include snippets/lys-montage-site.conf — перенести вручну" >&2
+  else
+    install -m 644 "$BASE/repo/deploy/nginx-lys-montage.conf" "$SITE_CONF"
+  fi
+fi
 ln -sfn /etc/nginx/sites-available/lys-montage /etc/nginx/sites-enabled/lys-montage
 rm -f /etc/nginx/sites-enabled/default
 nginx -t
@@ -91,7 +102,7 @@ cat <<'DONE'
      Подивитись лог:  journalctl -u lys-ig-sync.service -n 40 --no-pager
 
   2. Домен і HTTPS (коли A-запис уже вказує на цей сервер):
-     certbot --nginx -d lysmontage.com -d www.lysmontage.com
+     certbot --nginx --redirect -d lysmontage.com -d www.lysmontage.com
 
 Розклад таймера: systemctl list-timers lys-ig-sync.timer
 DONE

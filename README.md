@@ -7,7 +7,8 @@
 ## Структура
 
 ```text
-index.html               — уся розмітка сторінки
+index.html               — уся розмітка сторінки, SEO-теги та JSON-LD (Plumber/HVACBusiness)
+robots.txt, sitemap.xml  — для пошукових систем (домен lysmontage.com)
 assets/css/styles.css    — стилі, кольорова палітра, адаптивність
 assets/js/main.js        — карусель відгуків (кнопки + клавіатура)
 assets/js/instagram.js   — рендер галереї з Instagram-фіду
@@ -15,12 +16,13 @@ assets/images/           — реальні фото (джерела — docs/so
 assets/images/logos/     — логотипи брендів, Public domain (реєстр — docs/sources.md)
 tools/ig_sync.py         — щодобовий синк постів з Instagram API
 tools/ig-overrides.json  — ручні правки підписів і приховування постів
-deploy/                  — nginx, systemd timer, bootstrap і deploy для Hetzner
+deploy/                  — nginx (server-блок + правила сайту в snippet), systemd timer, bootstrap і deploy для Hetzner
 docs/instagram-sync.md   — налаштування Instagram API та сервера
 docs/instagram-token-for-client.md — інструкція для власника профілю: отримати токен
 docs/sources.md          — реєстр джерел, фактів і походження фото
 docs/content-map.md      — палітра, структура секцій, тексти з прив'язкою до джерел
 docs/delivery-report.md  — результати перевірок і відомі обмеження
+docs/LOCAL-SEO-ANALYSIS-lysmontage.com.md — аудит локального SEO і план дій
 ```
 
 Згенероване синком (`assets/data/instagram.json`, `assets/instagram/`) у git не потрапляє — воно живе на сервері.
